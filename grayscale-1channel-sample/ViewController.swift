@@ -26,16 +26,10 @@ class ViewController: UIViewController {
         let processQueue = DispatchQueue(label: "com.dumbass.sampleBuffer-vImageProcessor-queue")
         let start = Date.now
         var count = 60
-        view.isUserInteractionEnabled = false
         
-        capture.didOutputSampleBuffer = { [weak capture, unowned self] _, sampleBuffer, _ in
+        capture.didOutputSampleBuffer = { [weak capture] _, sampleBuffer, _ in
             processQueue.sync {
-                if count <= 0 {
-                    self.view.isUserInteractionEnabled = true
-                    print(Date.now - start)
-                    capture?.stop();
-                    return
-                }
+                if count <= 0 { print(Date.now - start); capture?.stop(); return }
                 var buffer: vImage_Buffer = .init()
                 vImageConvert_SampleBufferToPlanar8(sampleBuffer, &buffer)
                 free(buffer.data); count -= 1
@@ -50,16 +44,10 @@ class ViewController: UIViewController {
         let processQueue = DispatchQueue(label: "com.dumbass.sampleBuffer-processor-queue")
         let start = Date.now
         var count = 60
-        view.isUserInteractionEnabled = false
         
-        capture.didOutputSampleBuffer = { [weak capture, unowned self] _, sampleBuffer, _ in
+        capture.didOutputSampleBuffer = { [weak capture] _, sampleBuffer, _ in
             processQueue.sync {
-                if count <= 0 {
-                    self.view.isUserInteractionEnabled = true
-                    print(Date.now - start);
-                    capture?.stop();
-                    return
-                }
+                if count <= 0 { print(Date.now - start); capture?.stop(); return }
                 let buffer = sampleBufferCreatePlanar8(sampleBuffer)
                 free(buffer); count -= 1
             }

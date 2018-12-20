@@ -28,7 +28,12 @@ struct vImage_Config {
         ]
     }
     
-    init(redCoefficient: Float, greenCoefficient: Float, blueCoefficient: Float, divisor: Int32, compress: UInt8, format: vImage_CGImageFormat) {
+    init(redCoefficient: Float,
+         greenCoefficient: Float,
+         blueCoefficient: Float,
+         divisor: Int32,
+         compress: UInt8,
+         format: vImage_CGImageFormat) {
         
         self.redCoefficient         = redCoefficient
         self.blueCoefficient        = blueCoefficient
