@@ -28,12 +28,7 @@ struct vImage_Config {
         ]
     }
     
-    init(redCoefficient: Float,
-         greenCoefficient: Float,
-         blueCoefficient: Float,
-         divisor: Int32,
-         compress: UInt8,
-         format: vImage_CGImageFormat) {
+    init(redCoefficient: Float, greenCoefficient: Float, blueCoefficient: Float, divisor: Int32, compress: UInt8, format: vImage_CGImageFormat) {
         
         self.redCoefficient         = redCoefficient
         self.blueCoefficient        = blueCoefficient
@@ -48,7 +43,7 @@ struct vImage_Config {
         let format = vImage_CGImageFormat(bitsPerComponent: 8,
                                           bitsPerPixel: 32,
                                           colorSpace: .passRetained(CGColorSpaceCreateDeviceRGB()),
-                                          bitmapInfo: .init(rawValue: 5),
+                                          bitmapInfo: .init(rawValue: CGImageAlphaInfo.last.rawValue),
                                           version: 0,
                                           decode: nil,
                                           renderingIntent: .defaultIntent)
@@ -86,6 +81,8 @@ func vImageConvert_SampleBufferToPlanar8(
             return kvImageInvalidImageObject
         }
         
+        let cvImageFormat = vImageCVImageFormat_CreateWithCVPixelBuffer(imageBuffer)?.takeRetainedValue()
+        
         var sourceBuffer: vImage_Buffer = {
             
             var sourceImageBuffer = vImage_Buffer()
@@ -95,7 +92,7 @@ func vImageConvert_SampleBufferToPlanar8(
                 &sourceImageBuffer,
                 &format,
                 imageBuffer,
-                nil,
+                cvImageFormat,
                 nil,
                 vImage_Flags(kvImageNoFlags))
             
